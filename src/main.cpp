@@ -19,5 +19,5 @@ void loop() {
     bool armed = bikeButtonUpdate();
 
     bikeDisplayUpdate(bikeMoving, motionValueG);
-    bikeAlarmUpdate(armed && bikeMoving);
+    bikeAlarmUpdate(armed, bikeMoving);
 }

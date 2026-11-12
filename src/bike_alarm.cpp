@@ -12,12 +12,29 @@ void bikeAlarmBegin() {
     noTone(IoTPins::BUZZER);
 }
 
-void bikeAlarmUpdate(bool bikeMoving) {
+void bikeAlarmUpdate(bool armed, bool bikeMoving) {
     static uint32_t lastToggleMs = 0;
+    static bool alarmTriggered = false;
     static bool alarmActive = false;
 
-    if (bikeMoving) {
-        // Toggle the LED and buzzer every 250 milliseconds
+    // Reset the latched alarm and shut off hardware when disarmed
+    if (!armed) {
+        alarmTriggered = false;
+        if (alarmActive) {
+            digitalWrite(IoTPins::LED_1, LOW);
+            noTone(IoTPins::BUZZER);
+            alarmActive = false;
+        }
+        return;
+    }
+
+    // Latch the alarm once movement is detected while armed
+    if (bikeMoving && !alarmTriggered) {
+        alarmTriggered = true;
+    }
+
+    // Keep pulsing the LED and buzzer continuously until disarmed
+    if (alarmTriggered) {
         if (iotEvery(250, lastToggleMs)) {
             alarmActive = !alarmActive;
             
@@ -28,13 +45,6 @@ void bikeAlarmUpdate(bool bikeMoving) {
             } else {
                 noTone(IoTPins::BUZZER);
             }
-        }
-    } else {
-        // Force the hardware to an off state when disarmed/stationary
-        if (alarmActive) {
-            digitalWrite(IoTPins::LED_1, LOW);
-            noTone(IoTPins::BUZZER);
-            alarmActive = false;
         }
     }
 }
