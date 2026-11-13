@@ -2,6 +2,5 @@
 #define BIKE_DISPLAY_H
 
 void bikeDisplayBegin();
-void bikeDisplayUpdate(bool bikeMoving, float motionValueG);
-
+void bikeDisplayUpdate(bool armed, bool bikeMoving, bool alarmTriggered, float motionValueG, bool cloudOnline);
 #endif

@@ -12,7 +12,7 @@ void bikeAlarmBegin() {
     noTone(IoTPins::BUZZER);
 }
 
-void bikeAlarmUpdate(bool armed, bool bikeMoving) {
+bool bikeAlarmUpdate(bool armed, bool bikeMoving) {
     static uint32_t lastToggleMs = 0;
     static bool alarmTriggered = false;
     static bool alarmActive = false;
@@ -25,7 +25,7 @@ void bikeAlarmUpdate(bool armed, bool bikeMoving) {
             noTone(IoTPins::BUZZER);
             alarmActive = false;
         }
-        return;
+        return false;
     }
 
     // Latch the alarm once movement is detected while armed
@@ -47,4 +47,5 @@ void bikeAlarmUpdate(bool armed, bool bikeMoving) {
             }
         }
     }
+    return alarmTriggered;
 }
