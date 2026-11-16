@@ -8,6 +8,22 @@
 #include "iot_provision.h"
 #include "bike_cloud.h"
 
+#ifndef BIKE_WIFI_SSID
+#define BIKE_WIFI_SSID ""
+#endif
+#ifndef BIKE_WIFI_PASS
+#define BIKE_WIFI_PASS ""
+#endif
+#ifndef BIKE_MQTT_HOST
+#define BIKE_MQTT_HOST ""
+#endif
+#ifndef BIKE_MQTT_USER
+#define BIKE_MQTT_USER ""
+#endif
+#ifndef BIKE_MQTT_PASS
+#define BIKE_MQTT_PASS ""
+#endif
+
 #define TEAM_ID "T04" // Update if needed
 
 constexpr uint16_t MQTT_PORT = 8883;
@@ -49,11 +65,11 @@ static bool loadCredentials() {
     if (!prefs.begin(NVS_NAMESPACE, true)) {
         return false;
     }
-    creds.wifiSsid = prefs.getString("wifi_ssid", "Christopher_iPhone");
-    creds.wifiPass = prefs.getString("wifi_pass", "HelloWorld");
-    creds.mqttHost = prefs.getString("mqtt_host", "d511fce0.ala.us-east-1.emqxsl.com");
-    creds.mqttUser = prefs.getString("mqtt_user", "User1");
-    creds.mqttPass = prefs.getString("mqtt_pass", "Password");
+    creds.wifiSsid = prefs.getString("wifi_ssid", BIKE_WIFI_SSID);
+    creds.wifiPass = prefs.getString("wifi_pass", BIKE_WIFI_PASS);
+    creds.mqttHost = prefs.getString("mqtt_host", BIKE_MQTT_HOST);
+    creds.mqttUser = prefs.getString("mqtt_user", BIKE_MQTT_USER);
+    creds.mqttPass = prefs.getString("mqtt_pass", BIKE_MQTT_PASS);
     prefs.end();
 
     return creds.wifiSsid.length() > 0 &&
