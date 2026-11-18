@@ -16,6 +16,7 @@ namespace IoTPins {
   constexpr uint8_t BUZZER     = 27;   // Passive buzzer, driven with tone()
   constexpr uint8_t BUTTON_1   = 32;   // Use INPUT_PULLUP with button to GND
   constexpr uint8_t BUTTON_2   = 33;   // Use INPUT_PULLUP with button to GND
+  constexpr uint8_t BUTTON_3   = 13;
   constexpr uint8_t POT_ADC    = 34;   // ADC1 input-only pin
   constexpr uint8_t SERVO_PWM  = 13;   // Servo signal (orange wire); servo powered from the 5 V rail
 
