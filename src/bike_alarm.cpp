@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include "iot_pins.h"
-#include "iot_common.h"
 #include "bike_alarm.h"
 
-#define MOTION_LOW  0.5
-#define MOTION_HIGH 1.5
+static constexpr float MOTION_LOW_G = 0.5f;
+static constexpr float MOTION_HIGH_G = 1.5f;
+static constexpr uint32_t WARNING_DURATION_MS = 3000;
+static constexpr uint32_t FLASH_INTERVAL_MS = 250;
 
 static constexpr uint8_t BUZZER_CHANNEL = 0;
 static constexpr uint32_t BUZZER_FREQUENCY_HZ = 1000;
@@ -28,47 +29,43 @@ void bikeAlarmBegin() {
     }
 }
 
-bool bikeAlarmUpdate(bool armed, float motionValueG) {
-    static uint32_t lastToggleMs = 0;
-    static bool alarmTriggered = false;
-    static bool alarmActive = false;
+BikeAlarmState bikeAlarmUpdate(bool armed, bool bikeMoving, float motionValueG) {
+    static BikeAlarmState state = BikeAlarmState::Clear;
+    static uint32_t stateStartedMs = 0;
+    static bool buzzerOn = false;
 
+    const uint32_t now = millis();
     if (!armed) {
-        if (buzzerReady && alarmActive) {
-            ledcWrite(BUZZER_CHANNEL, 0);
-        }
-        alarmTriggered = false;
-        alarmActive = false;
-
-        digitalWrite(IoTPins::LED_1, LOW);
-        digitalWrite(IoTPins::LED_2, LOW);
-        digitalWrite(IoTPins::LED_3, LOW);
-        return false;
-    }
-
-    if (motionValueG >= MOTION_HIGH) {
-        alarmTriggered = true;
-    }
-
-    if (alarmTriggered) {
-        if (iotEvery(250, lastToggleMs)) {
-            alarmActive = !alarmActive;
-
-            digitalWrite(IoTPins::LED_1, alarmActive ? HIGH : LOW);
-            digitalWrite(IoTPins::LED_2, LOW);
-            digitalWrite(IoTPins::LED_3, LOW);
-
-            if (buzzerReady) {
-                ledcWrite(BUZZER_CHANNEL, alarmActive ? BUZZER_ON_DUTY : 0);
-            }
+        state = BikeAlarmState::Clear;
+    } else {
+        switch (state) {
+            case BikeAlarmState::Clear:
+                if (motionValueG >= MOTION_HIGH_G) {
+                    state = BikeAlarmState::Warning;
+                    stateStartedMs = now;
+                }
+                break;
+            case BikeAlarmState::Warning:
+                if (now - stateStartedMs >= WARNING_DURATION_MS) {
+                    state = bikeMoving ? BikeAlarmState::Triggered : BikeAlarmState::Clear;
+                    stateStartedMs = now;
+                }
+                break;
+            case BikeAlarmState::Triggered:
+                break;
         }
     }
 
-    else if (motionValueG >= MOTION_LOW) {
-        digitalWrite(IoTPins::LED_1, LOW);
-        digitalWrite(IoTPins::LED_2, HIGH);
-        digitalWrite(IoTPins::LED_3, LOW);
-    }
+    const bool flashOn = ((now - stateStartedMs) / FLASH_INTERVAL_MS) % 2 == 0;
+    const bool redOn = state == BikeAlarmState::Triggered && flashOn;
+    const bool warningLight = state == BikeAlarmState::Warning && flashOn;
+    const bool armedLight = armed && state == BikeAlarmState::Clear && motionValueG >= MOTION_LOW_G;
+    digitalWrite(IoTPins::LED_1, redOn ? HIGH : LOW);
+    digitalWrite(IoTPins::LED_2, (warningLight || armedLight) ? HIGH : LOW);
 
-    return alarmTriggered;
+    if (buzzerReady && redOn != buzzerOn) {
+        ledcWrite(BUZZER_CHANNEL, redOn ? BUZZER_ON_DUTY : 0);
+        buzzerOn = redOn;
+    }
+    return state;
 }

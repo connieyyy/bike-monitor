@@ -1,7 +1,13 @@
 #ifndef BIKE_ALARM_H
 #define BIKE_ALARM_H
 
+enum class BikeAlarmState {
+    Clear,
+    Warning,
+    Triggered
+};
+
 void bikeAlarmBegin();
-bool bikeAlarmUpdate(bool armed, float motionValueG);
+BikeAlarmState bikeAlarmUpdate(bool armed, bool bikeMoving, float motionValueG);
 
 #endif

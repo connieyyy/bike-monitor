@@ -8,7 +8,7 @@
 bool bikeMoving = false;
 float motionValueG = 0.0f;
 bool armed = true;
-bool alarmTriggered = false;
+BikeAlarmState alarmState = BikeAlarmState::Clear;
 
 void setup() {
     bikeDisplayBegin();
@@ -20,9 +20,9 @@ void setup() {
 
 void loop() {
     bikeMotionUpdate(bikeMoving, motionValueG);
-    armed = bikeButtonUpdate(bikeMoving, alarmTriggered);
-    alarmTriggered = bikeAlarmUpdate(armed, motionValueG);
-    bool cloudOnline = bikeCloudUpdate(armed, bikeMoving, alarmTriggered, motionValueG);
+    armed = bikeButtonUpdate(bikeMoving, alarmState == BikeAlarmState::Triggered);
+    alarmState = bikeAlarmUpdate(armed, bikeMoving, motionValueG);
+    bool cloudOnline = bikeCloudUpdate(armed, bikeMoving, alarmState, motionValueG);
 
-    bikeDisplayUpdate(armed, bikeMoving, alarmTriggered, motionValueG, cloudOnline);
+    bikeDisplayUpdate(armed, bikeMoving, alarmState, motionValueG, cloudOnline);
 }

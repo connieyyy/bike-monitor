@@ -1,7 +1,9 @@
 #ifndef BIKE_CLOUD_H
 #define BIKE_CLOUD_H
 
+#include "bike_alarm.h"
+
 void bikeCloudBegin();
-bool bikeCloudUpdate(bool armed, bool bikeMoving, bool alarmTriggered, float motionValueG);
+bool bikeCloudUpdate(bool armed, bool bikeMoving, BikeAlarmState alarmState, float motionValueG);
 
 #endif

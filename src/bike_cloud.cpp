@@ -58,7 +58,7 @@ static uint32_t pubOk = 0, pubFail = 0, reconnects = 0;
 // Latest sensor snapshot for Serial PUB command
 static bool curArmed = true;
 static bool curMoving = false;
-static bool curAlarm = false;
+static BikeAlarmState curAlarmState = BikeAlarmState::Clear;
 static float curMotionG = 0.0f;
 
 static bool loadCredentials() {
@@ -189,17 +189,27 @@ static void maintainMqtt() {
     }
 }
 
+static const char* alarmStateName(BikeAlarmState state) {
+    switch (state) {
+        case BikeAlarmState::Clear:     return "clear";
+        case BikeAlarmState::Warning:   return "warning";
+        case BikeAlarmState::Triggered: return "triggered";
+    }
+    return "clear";
+}
+
 static bool publishTelemetry() {
     if (!mqtt.connected()) return false;
 
     char buf[224];
     int n = snprintf(
         buf, sizeof(buf),
-        "{\"seq\":%lu,\"armed\":%s,\"moving\":%s,\"alarm\":%s,\"motion_g\":%.2f,\"rssi\":%d,\"uptime_s\":%lu}",
+        "{\"seq\":%lu,\"armed\":%s,\"moving\":%s,\"alarm\":%s,\"alarm_state\":\"%s\",\"motion_g\":%.2f,\"rssi\":%d,\"uptime_s\":%lu}",
         (unsigned long)++seqNo,
         curArmed ? "true" : "false",
         curMoving ? "true" : "false",
-        curAlarm ? "true" : "false",
+        curAlarmState == BikeAlarmState::Triggered ? "true" : "false",
+        alarmStateName(curAlarmState),
         curMotionG,
         WiFi.RSSI(),
         (unsigned long)(millis() / 1000)
@@ -286,15 +296,15 @@ void bikeCloudBegin() {
     configureMqtt();
 }
 
-bool bikeCloudUpdate(bool armed, bool bikeMoving, bool alarmTriggered, float motionValueG) {
+bool bikeCloudUpdate(bool armed, bool bikeMoving, BikeAlarmState alarmState, float motionValueG) {
     static bool prevArmed = true;
     static bool prevMoving = false;
-    static bool prevAlarm = false;
+    static BikeAlarmState prevAlarmState = BikeAlarmState::Clear;
     static uint32_t lastPub = 0;
 
     curArmed = armed;
     curMoving = bikeMoving;
-    curAlarm = alarmTriggered;
+    curAlarmState = alarmState;
     curMotionG = motionValueG;
 
     pollConsole();
@@ -302,11 +312,11 @@ bool bikeCloudUpdate(bool armed, bool bikeMoving, bool alarmTriggered, float mot
     maintainMqtt();
     mqtt.loop();
 
-    bool stateChanged = (armed != prevArmed) || (bikeMoving != prevMoving) || (alarmTriggered != prevAlarm);
+    bool stateChanged = (armed != prevArmed) || (bikeMoving != prevMoving) || (alarmState != prevAlarmState);
     if (stateChanged) {
         prevArmed = armed;
         prevMoving = bikeMoving;
-        prevAlarm = alarmTriggered;
+        prevAlarmState = alarmState;
     }
 
     // Publish immediately on state change OR on regular PERIOD_MS timer
