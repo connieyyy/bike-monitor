@@ -1,9 +1,12 @@
 #include <Arduino.h>
+#include <algorithm>
 #include "iot_pins.h"
 #include "bike_button.h"
 
 static constexpr uint32_t DEBOUNCE_MS = 50;
 static constexpr uint32_t SEQUENCE_TIMEOUT_MS = 3000;
+static constexpr uint8_t ALARM_DISARM_PATTERN[] = {2, 3, 2, 3, 2, 2};
+static constexpr size_t ALARM_DISARM_LENGTH = sizeof(ALARM_DISARM_PATTERN);
 
 struct ButtonTracker {
     uint8_t pin;
@@ -46,12 +49,39 @@ void bikeButtonBegin() {
     Serial.println("3-button arm/disarm ready.");
 }
 
-bool bikeButtonUpdate(bool bikeMoving, bool alarmTriggered) {
+BikeButtonUpdate bikeButtonUpdate(bool bikeMoving, bool alarmTriggered) {
+    static uint8_t alarmPresses[ALARM_DISARM_LENGTH];
+    static size_t alarmPressCount = 0;
     bool b1Pressed = wasButtonPressed(btn1);
     bool b2Pressed = wasButtonPressed(btn2);
     bool b3Pressed = wasButtonPressed(btn3);
 
-    bool isStationary = (!bikeMoving && !alarmTriggered);
+    if (alarmTriggered) {
+        sequenceStep = 0;
+        if (b2Pressed || b3Pressed) {
+            if (alarmPressCount < ALARM_DISARM_LENGTH && !b1Pressed && (b2Pressed != b3Pressed)) {
+                alarmPresses[alarmPressCount++] = b2Pressed ? 2 : 3;
+            } else {
+                alarmPressCount = ALARM_DISARM_LENGTH + 1;
+            }
+        }
+        if (b1Pressed) {
+            const bool accepted = alarmPressCount == ALARM_DISARM_LENGTH &&
+                std::equal(alarmPresses, alarmPresses + ALARM_DISARM_LENGTH, ALARM_DISARM_PATTERN);
+            alarmPressCount = 0;
+            if (accepted) {
+                armed = false;
+                Serial.println("BUTTON 1: Alarm code accepted. System DISARMED");
+            } else {
+                Serial.println("BUTTON 1: Alarm code rejected. Try again.");
+            }
+            return {armed, accepted ? BikeDisarmAttempt::Accepted : BikeDisarmAttempt::Rejected};
+        }
+        return {armed, BikeDisarmAttempt::None};
+    }
+    alarmPressCount = 0;
+
+    const bool isStationary = !bikeMoving;
 
     // Reset the Button 2 -> Button 3 sequence if it takes too long
     if (sequenceStep == 1 && (millis() - sequenceStartMs) > SEQUENCE_TIMEOUT_MS) {
@@ -59,7 +89,7 @@ bool bikeButtonUpdate(bool bikeMoving, bool alarmTriggered) {
         Serial.println("SEQUENCE: Timed out.");
     }
 
-    // Button 1: Arm anytime, or disarm ONLY when stationary and alarm is not active
+    // Button 1: Arm anytime, or disarm when stationary.
     if (b1Pressed) {
         sequenceStep = 0;
         if (!armed) {
@@ -69,7 +99,7 @@ bool bikeButtonUpdate(bool bikeMoving, bool alarmTriggered) {
             armed = false;
             Serial.println("BUTTON 1: System DISARMED (stationary)");
         } else {
-            Serial.println("BUTTON 1: Cannot disarm while active/moving. Press Button 2 -> Button 3.");
+            Serial.println("BUTTON 1: Cannot disarm while moving. Press Button 2 -> Button 3.");
         }
     }
 
@@ -92,5 +122,5 @@ bool bikeButtonUpdate(bool bikeMoving, bool alarmTriggered) {
         }
     }
 
-    return armed;
+    return {armed, BikeDisarmAttempt::None};
 }

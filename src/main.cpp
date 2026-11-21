@@ -20,9 +20,10 @@ void setup() {
 
 void loop() {
     bikeMotionUpdate(bikeMoving, motionValueG);
-    armed = bikeButtonUpdate(bikeMoving, alarmState == BikeAlarmState::Triggered);
+    const BikeButtonUpdate buttons = bikeButtonUpdate(bikeMoving, alarmState == BikeAlarmState::Triggered);
+    armed = buttons.armed;
     alarmState = bikeAlarmUpdate(armed, bikeMoving, motionValueG);
-    bool cloudOnline = bikeCloudUpdate(armed, bikeMoving, alarmState, motionValueG);
+    bool cloudOnline = bikeCloudUpdate(armed, bikeMoving, alarmState, motionValueG, buttons.disarmAttempt);
 
     bikeDisplayUpdate(armed, bikeMoving, alarmState, motionValueG, cloudOnline);
 }

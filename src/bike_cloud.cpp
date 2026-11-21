@@ -198,13 +198,22 @@ static const char* alarmStateName(BikeAlarmState state) {
     return "clear";
 }
 
-static bool publishTelemetry() {
+static const char* disarmAttemptField(BikeDisarmAttempt attempt) {
+    switch (attempt) {
+        case BikeDisarmAttempt::Accepted: return ",\"disarm_attempt\":\"accepted\"";
+        case BikeDisarmAttempt::Rejected: return ",\"disarm_attempt\":\"rejected\"";
+        case BikeDisarmAttempt::None:     return "";
+    }
+    return "";
+}
+
+static bool publishTelemetry(BikeDisarmAttempt disarmAttempt = BikeDisarmAttempt::None) {
     if (!mqtt.connected()) return false;
 
     char buf[224];
     int n = snprintf(
         buf, sizeof(buf),
-        "{\"seq\":%lu,\"armed\":%s,\"moving\":%s,\"alarm\":%s,\"alarm_state\":\"%s\",\"motion_g\":%.2f,\"rssi\":%d,\"uptime_s\":%lu}",
+        "{\"seq\":%lu,\"armed\":%s,\"moving\":%s,\"alarm\":%s,\"alarm_state\":\"%s\",\"motion_g\":%.2f,\"rssi\":%d,\"uptime_s\":%lu%s}",
         (unsigned long)++seqNo,
         curArmed ? "true" : "false",
         curMoving ? "true" : "false",
@@ -212,7 +221,8 @@ static bool publishTelemetry() {
         alarmStateName(curAlarmState),
         curMotionG,
         WiFi.RSSI(),
-        (unsigned long)(millis() / 1000)
+        (unsigned long)(millis() / 1000),
+        disarmAttemptField(disarmAttempt)
     );
 
     if (n < 0 || n >= (int)sizeof(buf)) return false;
@@ -296,7 +306,8 @@ void bikeCloudBegin() {
     configureMqtt();
 }
 
-bool bikeCloudUpdate(bool armed, bool bikeMoving, BikeAlarmState alarmState, float motionValueG) {
+bool bikeCloudUpdate(bool armed, bool bikeMoving, BikeAlarmState alarmState, float motionValueG,
+                     BikeDisarmAttempt disarmAttempt) {
     static bool prevArmed = true;
     static bool prevMoving = false;
     static BikeAlarmState prevAlarmState = BikeAlarmState::Clear;
@@ -319,9 +330,9 @@ bool bikeCloudUpdate(bool armed, bool bikeMoving, BikeAlarmState alarmState, flo
         prevAlarmState = alarmState;
     }
 
-    // Publish immediately on state change OR on regular PERIOD_MS timer
-    if (mqtt.connected() && (stateChanged || iotEvery(PERIOD_MS, lastPub))) {
-        if (publishTelemetry()) {
+    const bool attemptConfirmed = disarmAttempt != BikeDisarmAttempt::None;
+    if (mqtt.connected() && (stateChanged || attemptConfirmed || iotEvery(PERIOD_MS, lastPub))) {
+        if (publishTelemetry(disarmAttempt)) {
             pubOk++;
             lastPub = millis(); // reset interval timer after an immediate state publish
         } else {
