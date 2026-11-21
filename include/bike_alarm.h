@@ -2,6 +2,6 @@
 #define BIKE_ALARM_H
 
 void bikeAlarmBegin();
-bool bikeAlarmUpdate(bool armed, bool bikeMoving);
+bool bikeAlarmUpdate(bool armed, float bikeMoving);
 
 #endif
