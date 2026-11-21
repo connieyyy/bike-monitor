@@ -6,6 +6,12 @@
 #define MOTION_LOW  0.5
 #define MOTION_HIGH 1.5
 
+static constexpr uint8_t BUZZER_CHANNEL = 0;
+static constexpr uint32_t BUZZER_FREQUENCY_HZ = 1000;
+static constexpr uint8_t BUZZER_RESOLUTION_BITS = 8;
+static constexpr uint32_t BUZZER_ON_DUTY = 1U << (BUZZER_RESOLUTION_BITS - 1);
+static bool buzzerReady = false;
+
 void bikeAlarmBegin() {
     pinMode(IoTPins::LED_1, OUTPUT);
     pinMode(IoTPins::LED_2, OUTPUT);
@@ -15,27 +21,32 @@ void bikeAlarmBegin() {
     digitalWrite(IoTPins::LED_1, LOW);
     digitalWrite(IoTPins::LED_2, LOW);
     digitalWrite(IoTPins::LED_3, LOW);
-    noTone(IoTPins::BUZZER);
+    buzzerReady = ledcSetup(BUZZER_CHANNEL, BUZZER_FREQUENCY_HZ, BUZZER_RESOLUTION_BITS) != 0;
+    if (buzzerReady) {
+        ledcAttachPin(IoTPins::BUZZER, BUZZER_CHANNEL);
+        ledcWrite(BUZZER_CHANNEL, 0);
+    }
 }
 
-bool bikeAlarmUpdate(bool armed, float motionValue) {
+bool bikeAlarmUpdate(bool armed, float motionValueG) {
     static uint32_t lastToggleMs = 0;
     static bool alarmTriggered = false;
     static bool alarmActive = false;
 
     if (!armed) {
+        if (buzzerReady && alarmActive) {
+            ledcWrite(BUZZER_CHANNEL, 0);
+        }
         alarmTriggered = false;
         alarmActive = false;
 
         digitalWrite(IoTPins::LED_1, LOW);
         digitalWrite(IoTPins::LED_2, LOW);
         digitalWrite(IoTPins::LED_3, LOW);
-        noTone(IoTPins::BUZZER);
-
         return false;
     }
 
-    if (motionValue >= MOTION_HIGH) {
+    if (motionValueG >= MOTION_HIGH) {
         alarmTriggered = true;
     }
 
@@ -47,19 +58,16 @@ bool bikeAlarmUpdate(bool armed, float motionValue) {
             digitalWrite(IoTPins::LED_2, LOW);
             digitalWrite(IoTPins::LED_3, LOW);
 
-            if (alarmActive) {
-                tone(IoTPins::BUZZER, 1000);
-            } else {
-                noTone(IoTPins::BUZZER);
+            if (buzzerReady) {
+                ledcWrite(BUZZER_CHANNEL, alarmActive ? BUZZER_ON_DUTY : 0);
             }
         }
     }
 
-    else if (motionValue >= MOTION_LOW) {
+    else if (motionValueG >= MOTION_LOW) {
         digitalWrite(IoTPins::LED_1, LOW);
         digitalWrite(IoTPins::LED_2, HIGH);
         digitalWrite(IoTPins::LED_3, LOW);
-        noTone(IoTPins::BUZZER);
     }
 
     return alarmTriggered;

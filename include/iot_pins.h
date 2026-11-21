@@ -13,7 +13,7 @@ namespace IoTPins {
   constexpr uint8_t LED_1      = 2;    // Red LED (also the onboard LED on many boards)
   constexpr uint8_t LED_2      = 4;    // Yellow LED
   constexpr uint8_t LED_3      = 15;   // Green LED
-  constexpr uint8_t BUZZER     = 27;   // Passive buzzer, driven with tone()
+  constexpr uint8_t BUZZER     = 27;   // Passive buzzer, driven with PWM
   constexpr uint8_t BUTTON_1   = 32;   // Use INPUT_PULLUP with button to GND
   constexpr uint8_t BUTTON_2   = 33;   // Use INPUT_PULLUP with button to GND
   constexpr uint8_t BUTTON_3   = 13;

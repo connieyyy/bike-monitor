@@ -21,7 +21,7 @@ void setup() {
 void loop() {
     bikeMotionUpdate(bikeMoving, motionValueG);
     armed = bikeButtonUpdate(bikeMoving, alarmTriggered);
-    alarmTriggered = bikeAlarmUpdate(armed, bikeMoving);
+    alarmTriggered = bikeAlarmUpdate(armed, motionValueG);
     bool cloudOnline = bikeCloudUpdate(armed, bikeMoving, alarmTriggered, motionValueG);
 
     bikeDisplayUpdate(armed, bikeMoving, alarmTriggered, motionValueG, cloudOnline);
