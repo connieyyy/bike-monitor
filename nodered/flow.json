@@ -395,7 +395,25 @@
     "y": 730,
     "wires": [
       []
-    ]
+    ],
+    "chartOptions": {
+      "grid": {
+        "bottom": 44
+      },
+      "dataZoom": [
+        {
+          "id": "time-range",
+          "type": "slider",
+          "xAxisIndex": 0,
+          "start": 0,
+          "end": 100,
+          "height": 16,
+          "bottom": 3,
+          "showDetail": false,
+          "brushSelect": false
+        }
+      ]
+    }
   },
   {
     "id": "a5f0c1d2e3b4010a",
@@ -668,7 +686,25 @@
     "y": 770,
     "wires": [
       []
-    ]
+    ],
+    "chartOptions": {
+      "grid": {
+        "bottom": 44
+      },
+      "dataZoom": [
+        {
+          "id": "time-range",
+          "type": "slider",
+          "xAxisIndex": 0,
+          "start": 0,
+          "end": 100,
+          "height": 16,
+          "bottom": 3,
+          "showDetail": false,
+          "brushSelect": false
+        }
+      ]
+    }
   },
   {
     "id": "a5f0c1d2e3b40307",
