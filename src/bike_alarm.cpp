@@ -62,10 +62,12 @@ BikeAlarmState bikeAlarmUpdate(bool armed, bool bikeMoving, float motionValueG) 
     const bool armedLight = armed && state == BikeAlarmState::Clear && motionValueG >= MOTION_LOW_G;
     digitalWrite(IoTPins::LED_1, redOn ? HIGH : LOW);
     digitalWrite(IoTPins::LED_2, (warningLight || armedLight) ? HIGH : LOW);
+    digitalWrite(IoTPins::LED_3, armed ? LOW : HIGH);
 
-    if (buzzerReady && redOn != buzzerOn) {
-        ledcWrite(BUZZER_CHANNEL, redOn ? BUZZER_ON_DUTY : 0);
-        buzzerOn = redOn;
+    const bool shouldBuzz = warningLight || redOn;
+    if (buzzerReady && shouldBuzz != buzzerOn) {
+        ledcWrite(BUZZER_CHANNEL, shouldBuzz ? BUZZER_ON_DUTY : 0);
+        buzzerOn = shouldBuzz;
     }
     return state;
 }
