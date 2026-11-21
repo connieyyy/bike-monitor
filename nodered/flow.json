@@ -1,0 +1,853 @@
+[
+  {
+    "id": "a5f0c1d2e3b40001",
+    "type": "tab",
+    "label": "BikeBeacon dashboard",
+    "disabled": false,
+    "info": "BikeBeacon T04 telemetry and device status from EMQX over MQTT/TLS."
+  },
+  {
+    "id": "a5f0c1d2e3b40010",
+    "type": "ui-base",
+    "name": "BikeBeacon",
+    "path": "/dashboard",
+    "appIcon": "",
+    "includeClientData": true,
+    "acceptsClientConfig": [
+      "ui-notification",
+      "ui-control"
+    ],
+    "showPathInSidebar": false,
+    "headerContent": "page",
+    "navigationStyle": "default",
+    "titleBarStyle": "default",
+    "showReconnectNotification": true,
+    "notificationDisplayTime": 1,
+    "showDisconnectNotification": true,
+    "allowInstall": false
+  },
+  {
+    "id": "a5f0c1d2e3b40011",
+    "type": "ui-theme",
+    "name": "IoT@UCI theme",
+    "colors": {
+      "surface": "#0064a4",
+      "primary": "#0064a4",
+      "bgPage": "#f8fafc",
+      "groupBg": "#ffffff",
+      "groupOutline": "#e2e8f0"
+    },
+    "sizes": {
+      "density": "default",
+      "pagePadding": "12px",
+      "groupGap": "12px",
+      "groupBorderRadius": "6px",
+      "widgetGap": "12px"
+    }
+  },
+  {
+    "id": "a5f0c1d2e3b40012",
+    "type": "ui-page",
+    "name": "BikeBeacon",
+    "ui": "a5f0c1d2e3b40010",
+    "path": "/bikebeacon",
+    "icon": "cloud",
+    "layout": "grid",
+    "theme": "a5f0c1d2e3b40011",
+    "breakpoints": [
+      {
+        "name": "Default",
+        "px": 0,
+        "cols": 4
+      },
+      {
+        "name": "Tablet",
+        "px": 640,
+        "cols": 8
+      },
+      {
+        "name": "Desktop",
+        "px": 1024,
+        "cols": 12
+      }
+    ],
+    "order": 1,
+    "className": "",
+    "visible": "true",
+    "disabled": "false"
+  },
+  {
+    "id": "a5f0c1d2e3b40013",
+    "type": "ui-group",
+    "name": "Current info",
+    "page": "a5f0c1d2e3b40012",
+    "width": 4,
+    "height": 1,
+    "order": 1,
+    "showTitle": false,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "a5f0c1d2e3b40014",
+    "type": "ui-group",
+    "name": "Graphs",
+    "page": "a5f0c1d2e3b40012",
+    "width": 4,
+    "height": 1,
+    "order": 2,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "a5f0c1d2e3b40021",
+    "type": "tls-config",
+    "name": "Verify broker (system CAs)",
+    "cert": "",
+    "key": "",
+    "ca": "",
+    "certname": "",
+    "keyname": "",
+    "caname": "",
+    "servername": "",
+    "verifyservercert": true,
+    "alpnprotocol": ""
+  },
+  {
+    "id": "a5f0c1d2e3b40020",
+    "type": "mqtt-broker",
+    "name": "EMQX",
+    "broker": "YOUR-CLUSTER-ID.s1.eu.hivemq.cloud",
+    "port": "8883",
+    "tls": "a5f0c1d2e3b40021",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": true,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "a5f0c1d2e3b40101",
+    "type": "comment",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Before you deploy: read the steps (double-click me)",
+    "info": "Check the EMQX deployment address and MQTT credentials in the broker configuration. Use TLS on port 8883 with broker verification.\nDeploy, then open http://localhost:1880/dashboard/bikebeacon.",
+    "x": 210,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b40102",
+    "type": "mqtt in",
+    "z": "a5f0c1d2e3b40001",
+    "name": "telemetry",
+    "topic": "iot/T04/telemetry",
+    "qos": "1",
+    "datatype": "json",
+    "broker": "a5f0c1d2e3b40020",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 120,
+    "wires": [
+      [
+        "a5f0c1d2e3b40109",
+        "a5f0c1d2e3b40202",
+        "a5f0c1d2e3b40203",
+        "a5f0c1d2e3b40204",
+        "a5f0c1d2e3b40205",
+        "a5f0c1d2e3b40206",
+        "a5f0c1d2e3b40207",
+        "a5f0c1d2e3b4010c"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40109",
+    "type": "debug",
+    "z": "a5f0c1d2e3b40001",
+    "name": "raw telemetry",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 370,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b40202",
+    "type": "ui-text",
+    "z": "a5f0c1d2e3b40001",
+    "group": "a5f0c1d2e3b40013",
+    "order": 6,
+    "width": 4,
+    "height": 1,
+    "name": "Acceleration (g)",
+    "label": "Acceleration (g)",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "value": "payload.motion_g",
+    "valueType": "msg",
+    "x": 400,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b40203",
+    "z": "a5f0c1d2e3b40001",
+    "name": "System",
+    "group": "a5f0c1d2e3b40013",
+    "order": 8,
+    "width": 4,
+    "height": 1,
+    "className": "",
+    "x": 400,
+    "y": 240,
+    "type": "ui-template",
+    "format": "<template>\n  <div class=\"bike-state-row\">\n    <span>{{ label }}</span>\n    <div class=\"bike-state-options\" :aria-label=\"activeLabel\">\n      <span v-for=\"option in options\" :key=\"option.label\" class=\"bike-event-value\"\n        :class=\"['bike-state-' + option.color, { 'bike-state-selected': current === option.value }]\"\n        :aria-current=\"current === option.value ? 'true' : undefined\">{{ option.label }}</span>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n    data() {\n        return { label: \"System\", field: \"armed\", options: [{\"value\": true, \"label\": \"Armed\", \"color\": \"active\"}, {\"value\": false, \"label\": \"Disarmed\", \"color\": \"neutral\"}], lastConnection: null }\n    },\n    computed: {\n        current() {\n            const payload = this.msg?.payload\n            if (this.field === 'connection') {\n                return payload === 'online' || payload === 'offline' ? payload : this.lastConnection\n            }\n            return payload?.[this.field]\n        },\n        activeLabel() {\n            const selected = this.options.find(option => option.value === this.current)\n            return selected ? this.label + ': ' + selected.label : this.label + ': waiting for data'\n        }\n    },\n    async mounted() {\n        if (this.field !== 'connection' || this.current !== null) return\n        try {\n            const response = await fetch('/bikebeacon/history/connection', { cache: 'no-store' })\n            if (!response.ok) return\n            const line = (await response.text()).trim().split('\\n').pop()\n            if (line) this.lastConnection = JSON.parse(line).current\n        } catch {\n            // The live status still updates when MQTT sends its next value.\n        }\n    }\n}\n</script>",
+    "head": "",
+    "noerr": 0,
+    "storeOutMessages": false,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40204",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Motion",
+    "group": "a5f0c1d2e3b40013",
+    "order": 7,
+    "width": 4,
+    "height": 1,
+    "className": "",
+    "x": 400,
+    "y": 280,
+    "type": "ui-template",
+    "format": "<template>\n  <div class=\"bike-state-row\">\n    <span>{{ label }}</span>\n    <div class=\"bike-state-options\" :aria-label=\"activeLabel\">\n      <span v-for=\"option in options\" :key=\"option.label\" class=\"bike-event-value\"\n        :class=\"['bike-state-' + option.color, { 'bike-state-selected': current === option.value }]\"\n        :aria-current=\"current === option.value ? 'true' : undefined\">{{ option.label }}</span>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n    data() {\n        return { label: \"Motion\", field: \"moving\", options: [{\"value\": false, \"label\": \"Stationary\", \"color\": \"neutral\"}, {\"value\": true, \"label\": \"Moving\", \"color\": \"warning\"}], lastConnection: null }\n    },\n    computed: {\n        current() {\n            const payload = this.msg?.payload\n            if (this.field === 'connection') {\n                return payload === 'online' || payload === 'offline' ? payload : this.lastConnection\n            }\n            return payload?.[this.field]\n        },\n        activeLabel() {\n            const selected = this.options.find(option => option.value === this.current)\n            return selected ? this.label + ': ' + selected.label : this.label + ': waiting for data'\n        }\n    },\n    async mounted() {\n        if (this.field !== 'connection' || this.current !== null) return\n        try {\n            const response = await fetch('/bikebeacon/history/connection', { cache: 'no-store' })\n            if (!response.ok) return\n            const line = (await response.text()).trim().split('\\n').pop()\n            if (line) this.lastConnection = JSON.parse(line).current\n        } catch {\n            // The live status still updates when MQTT sends its next value.\n        }\n    }\n}\n</script>",
+    "head": "",
+    "noerr": 0,
+    "storeOutMessages": false,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40205",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Alarm",
+    "group": "a5f0c1d2e3b40013",
+    "order": 9,
+    "width": 4,
+    "height": 1,
+    "className": "",
+    "x": 400,
+    "y": 320,
+    "type": "ui-template",
+    "format": "<template>\n  <div class=\"bike-state-row\">\n    <span>{{ label }}</span>\n    <div class=\"bike-state-options\" :aria-label=\"activeLabel\">\n      <span v-for=\"option in options\" :key=\"option.label\" class=\"bike-event-value\"\n        :class=\"['bike-state-' + option.color, { 'bike-state-selected': current === option.value }]\"\n        :aria-current=\"current === option.value ? 'true' : undefined\">{{ option.label }}</span>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n    data() {\n        return { label: \"Alarm\", field: \"alarm\", options: [{\"value\": false, \"label\": \"Clear\", \"color\": \"good\"}, {\"value\": true, \"label\": \"Triggered\", \"color\": \"bad\"}], lastConnection: null }\n    },\n    computed: {\n        current() {\n            const payload = this.msg?.payload\n            if (this.field === 'connection') {\n                return payload === 'online' || payload === 'offline' ? payload : this.lastConnection\n            }\n            return payload?.[this.field]\n        },\n        activeLabel() {\n            const selected = this.options.find(option => option.value === this.current)\n            return selected ? this.label + ': ' + selected.label : this.label + ': waiting for data'\n        }\n    },\n    async mounted() {\n        if (this.field !== 'connection' || this.current !== null) return\n        try {\n            const response = await fetch('/bikebeacon/history/connection', { cache: 'no-store' })\n            if (!response.ok) return\n            const line = (await response.text()).trim().split('\\n').pop()\n            if (line) this.lastConnection = JSON.parse(line).current\n        } catch {\n            // The live status still updates when MQTT sends its next value.\n        }\n    }\n}\n</script>",
+    "head": "",
+    "noerr": 0,
+    "storeOutMessages": false,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40206",
+    "type": "ui-text",
+    "z": "a5f0c1d2e3b40001",
+    "group": "a5f0c1d2e3b40013",
+    "order": 4,
+    "width": 4,
+    "height": 1,
+    "name": "Wi-Fi signal (dBm)",
+    "label": "Wi-Fi signal (dBm)",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "value": "payload.rssi",
+    "valueType": "msg",
+    "x": 400,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b40207",
+    "type": "ui-text",
+    "z": "a5f0c1d2e3b40001",
+    "group": "a5f0c1d2e3b40013",
+    "order": 3,
+    "width": 4,
+    "height": 1,
+    "name": "Uptime",
+    "label": "Uptime (D:HH:MM:SS)",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "value": "($seconds := payload.uptime_s; $floor($seconds / 86400) & ':' & $formatNumber($floor($seconds / 3600) % 24, '00') & ':' & $formatNumber($floor($seconds / 60) % 60, '00') & ':' & $formatNumber($seconds % 60, '00'))",
+    "valueType": "jsonata",
+    "x": 400,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b40209",
+    "type": "ui-chart",
+    "z": "a5f0c1d2e3b40001",
+    "group": "a5f0c1d2e3b40014",
+    "name": "Acceleration history",
+    "label": "Acceleration by minute",
+    "order": 1,
+    "chartType": "line",
+    "category": "series",
+    "categoryType": "property",
+    "xAxisLabel": "",
+    "xAxisProperty": "minute",
+    "xAxisPropertyType": "property",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "xmin": "",
+    "xmax": "",
+    "yAxisLabel": "Acceleration (g)",
+    "yAxisProperty": "value",
+    "yAxisPropertyType": "property",
+    "ymin": "",
+    "ymax": "",
+    "action": "replace",
+    "stackSeries": false,
+    "pointShape": "circle",
+    "pointRadius": 0,
+    "showLegend": true,
+    "removeOlder": 0,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0064a4",
+      "#c62828"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 4,
+    "height": 6,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1200,
+    "y": 730,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4010a",
+    "type": "mqtt in",
+    "z": "a5f0c1d2e3b40001",
+    "name": "status (Last Will)",
+    "topic": "iot/T04/status",
+    "qos": "1",
+    "datatype": "utf8",
+    "broker": "a5f0c1d2e3b40020",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 520,
+    "wires": [
+      [
+        "a5f0c1d2e3b4010b",
+        "a5f0c1d2e3b4010c"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4010b",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Device status text",
+    "group": "a5f0c1d2e3b40013",
+    "order": 2,
+    "width": 4,
+    "height": 1,
+    "className": "",
+    "x": 400,
+    "y": 500,
+    "type": "ui-template",
+    "format": "<template>\n  <div class=\"bike-state-row\">\n    <span>{{ label }}</span>\n    <div class=\"bike-state-options\" :aria-label=\"activeLabel\">\n      <span v-for=\"option in options\" :key=\"option.label\" class=\"bike-event-value\"\n        :class=\"['bike-state-' + option.color, { 'bike-state-selected': current === option.value }]\"\n        :aria-current=\"current === option.value ? 'true' : undefined\">{{ option.label }}</span>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n    data() {\n        return { label: \"Device status\", field: \"connection\", options: [{\"value\": \"online\", \"label\": \"Online\", \"color\": \"good\"}, {\"value\": \"offline\", \"label\": \"Offline\", \"color\": \"bad\"}], lastConnection: null }\n    },\n    computed: {\n        current() {\n            const payload = this.msg?.payload\n            if (this.field === 'connection') {\n                return payload === 'online' || payload === 'offline' ? payload : this.lastConnection\n            }\n            return payload?.[this.field]\n        },\n        activeLabel() {\n            const selected = this.options.find(option => option.value === this.current)\n            return selected ? this.label + ': ' + selected.label : this.label + ': waiting for data'\n        }\n    },\n    async mounted() {\n        if (this.field !== 'connection' || this.current !== null) return\n        try {\n            const response = await fetch('/bikebeacon/history/connection', { cache: 'no-store' })\n            if (!response.ok) return\n            const line = (await response.text()).trim().split('\\n').pop()\n            if (line) this.lastConnection = JSON.parse(line).current\n        } catch {\n            // The live status still updates when MQTT sends its next value.\n        }\n    }\n}\n</script>",
+    "head": "",
+    "noerr": 0,
+    "storeOutMessages": false,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "templateScope": "local",
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4010c",
+    "type": "function",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Record telemetry and state changes",
+    "func": "const home = env.get('HOME') || env.get('USERPROFILE');\nconst historyDir = env.get('BIKEBEACON_HISTORY_DIR') || (home && home + '/.node-red/bikebeacon-history');\nif (!historyDir) {\n    node.error('Set BIKEBEACON_HISTORY_DIR to a writable directory.', msg);\n    return null;\n}\nconst received_at = new Date().toISOString();\nconst state = context.get('device') || { states: {}, latest: null };\nconst records = [];\nlet alert = null;\n\nfunction record(file, data) {\n    records.push({ filename: historyDir + '/' + file + '.jsonl', payload: data });\n}\n\nfunction observe(type, current, details) {\n    const previous = state.states[type] ?? null;\n    if (previous === current) return previous;\n    state.states[type] = current;\n    record(type, { received_at, observation: previous === null ? 'initial' : 'change', previous, current, ...details });\n    return previous;\n}\n\nif (msg.topic === 'iot/T04/telemetry') {\n    const telemetry = msg.payload;\n    record('telemetry', { received_at, topic: msg.topic, telemetry });\n    if (telemetry && typeof telemetry === 'object') {\n        state.latest = { received_at, telemetry };\n        const states = {\n            motion: [telemetry.moving, 'Moving', 'Stationary'],\n            system: [telemetry.armed, 'Armed', 'Disarmed'],\n            alarm: [telemetry.alarm, 'Triggered', 'Clear']\n        };\n        for (const [type, [value, on, off]] of Object.entries(states)) {\n            if (typeof value === 'boolean') observe(type, value ? on : off, { telemetry });\n        }\n    }\n} else if (msg.topic === 'iot/T04/status' && ['online', 'offline'].includes(msg.payload)) {\n    const previous = observe('connection', msg.payload, {\n        retained: msg.retain === true,\n        last_telemetry: state.latest\n    });\n    if (previous === 'online' && msg.payload === 'offline') {\n        alert = { payload: 'BikeBeacon went offline at ' + received_at };\n    }\n}\n\ncontext.set('device', state);\nreturn [records.length ? records : null, alert];\n",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 465,
+    "y": 560,
+    "wires": [
+      [
+        "a5f0c1d2e3b40301"
+      ],
+      [
+        "a5f0c1d2e3b4010d",
+        "a5f0c1d2e3b4010e"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4010d",
+    "type": "ui-notification",
+    "z": "a5f0c1d2e3b40001",
+    "ui": "a5f0c1d2e3b40010",
+    "position": "top right",
+    "colorDefault": false,
+    "color": "#c62828",
+    "displayTime": "0",
+    "showCountdown": false,
+    "outputs": 1,
+    "allowDismiss": true,
+    "dismissText": "Dismiss",
+    "allowConfirm": false,
+    "confirmText": "Confirm",
+    "raw": false,
+    "className": "",
+    "name": "Offline alert (stays until dismissed)",
+    "x": 680,
+    "y": 540,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4010e",
+    "type": "debug",
+    "z": "a5f0c1d2e3b40001",
+    "name": "alerts",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 650,
+    "y": 600,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b4010f",
+    "type": "comment",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Optional: email alert",
+    "info": "Install node-red-node-email (Menu > Manage palette), add an 'e-mail' output node, and wire it after 'offline detector'. Use an app password, never your UCI password. Not required for the rubric.",
+    "x": 400,
+    "y": 640,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b40301",
+    "type": "file",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Append run history",
+    "filename": "filename",
+    "filenameType": "msg",
+    "appendNewline": true,
+    "createDir": true,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 735,
+    "y": 610,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40302",
+    "type": "inject",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Refresh charts each minute",
+    "props": [],
+    "repeat": "60",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 2,
+    "topic": "",
+    "x": 180,
+    "y": 750,
+    "wires": [
+      [
+        "a5f0c1d2e3b40303"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40303",
+    "type": "function",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Locate telemetry archive",
+    "func": "const home = env.get('HOME') || env.get('USERPROFILE');\nconst historyDir = env.get('BIKEBEACON_HISTORY_DIR') || (home && home + '/.node-red/bikebeacon-history');\nif (!historyDir) return null;\nmsg.filename = historyDir + '/telemetry.jsonl';\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 435,
+    "y": 750,
+    "wires": [
+      [
+        "a5f0c1d2e3b40304"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40304",
+    "type": "file in",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Read telemetry archive",
+    "filename": "filename",
+    "filenameType": "msg",
+    "format": "utf8",
+    "chunk": false,
+    "sendError": false,
+    "encoding": "none",
+    "allProps": false,
+    "x": 690,
+    "y": 750,
+    "wires": [
+      [
+        "a5f0c1d2e3b40305"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40305",
+    "type": "function",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Summarize each minute",
+    "func": "const windows = new Map();\nfor (const line of msg.payload.split('\\n')) {\n    if (!line.trim()) continue;\n    let row;\n    try {\n        row = JSON.parse(line);\n    } catch (err) {\n        continue;\n    }\n    const timestamp = Date.parse(row.received_at);\n    if (!Number.isFinite(timestamp) || !row.telemetry) continue;\n    const minute = Math.floor(timestamp / 60000) * 60000;\n    if (!windows.has(minute)) windows.set(minute, {});\n    const bucket = windows.get(minute);\n    for (const field of ['motion_g', 'rssi']) {\n        const value = row.telemetry[field];\n        if (!Number.isFinite(value)) continue;\n        const samples = bucket[field] ??= { count: 0, sum: 0, min: value, max: value };\n        samples.count++;\n        samples.sum += value;\n        samples.min = Math.min(samples.min, value);\n        samples.max = Math.max(samples.max, value);\n    }\n}\n\nfunction seriesFor(field, extreme, extremeLabel) {\n    const points = [];\n    for (const [minute, fields] of windows) {\n        const samples = fields[field];\n        if (!samples) continue;\n        const average = Math.round(samples.sum / samples.count * 100) / 100;\n        points.push({ minute, series: 'Average', value: average });\n        points.push({ minute, series: extremeLabel, value: samples[extreme] });\n    }\n    return { action: 'replace', payload: points };\n}\nreturn [seriesFor('motion_g', 'max', 'Peak'), seriesFor('rssi', 'min', 'Weakest')];\n",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 935,
+    "y": 750,
+    "wires": [
+      [
+        "a5f0c1d2e3b40209"
+      ],
+      [
+        "a5f0c1d2e3b40306"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40306",
+    "type": "ui-chart",
+    "z": "a5f0c1d2e3b40001",
+    "group": "a5f0c1d2e3b40014",
+    "name": "Wi-Fi signal history",
+    "label": "Wi-Fi signal by minute",
+    "order": 2,
+    "chartType": "line",
+    "category": "series",
+    "categoryType": "property",
+    "xAxisLabel": "",
+    "xAxisProperty": "minute",
+    "xAxisPropertyType": "property",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "xmin": "",
+    "xmax": "",
+    "yAxisLabel": "Signal strength (dBm)",
+    "yAxisProperty": "value",
+    "yAxisPropertyType": "property",
+    "ymin": "",
+    "ymax": "",
+    "action": "replace",
+    "stackSeries": false,
+    "pointShape": "circle",
+    "pointRadius": 0,
+    "showLegend": true,
+    "removeOlder": 0,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0064a4",
+      "#c62828"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 4,
+    "height": 6,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1200,
+    "y": 770,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40307",
+    "type": "http in",
+    "z": "a5f0c1d2e3b40001",
+    "name": "History download",
+    "url": "/bikebeacon/history/:type",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 185,
+    "y": 880,
+    "wires": [
+      [
+        "a5f0c1d2e3b40308"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40308",
+    "type": "function",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Resolve archive type",
+    "func": "const home = env.get('HOME') || env.get('USERPROFILE');\nconst historyDir = env.get('BIKEBEACON_HISTORY_DIR') || (home && home + '/.node-red/bikebeacon-history');\nconst type = msg.req.params.type;\nconst allowed = ['telemetry', 'connection', 'motion', 'system', 'alarm'];\nif (!allowed.includes(type)) {\n    msg.statusCode = 404;\n    msg.payload = 'Unknown BikeBeacon history type.';\n    return [null, msg];\n}\nif (!historyDir) {\n    msg.statusCode = 500;\n    msg.payload = 'Set BIKEBEACON_HISTORY_DIR to a writable directory.';\n    return [null, msg];\n}\nmsg.filename = historyDir + '/' + type + '.jsonl';\nmsg.headers = { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' };\nreturn [msg, null];\n",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 430,
+    "y": 880,
+    "wires": [
+      [
+        "a5f0c1d2e3b40309"
+      ],
+      [
+        "a5f0c1d2e3b4030b"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40309",
+    "type": "file in",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Read requested archive",
+    "filename": "filename",
+    "filenameType": "msg",
+    "format": "utf8",
+    "chunk": false,
+    "sendError": false,
+    "encoding": "none",
+    "allProps": false,
+    "x": 690,
+    "y": 860,
+    "wires": [
+      [
+        "a5f0c1d2e3b4030b"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4030a",
+    "type": "catch",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Handle archive read errors",
+    "scope": [
+      "a5f0c1d2e3b40304",
+      "a5f0c1d2e3b40309"
+    ],
+    "uncaught": false,
+    "x": 690,
+    "y": 930,
+    "wires": [
+      [
+        "a5f0c1d2e3b4030c"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4030b",
+    "type": "http response",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Send history",
+    "statusCode": "",
+    "headers": {},
+    "x": 1195,
+    "y": 865,
+    "wires": []
+  },
+  {
+    "id": "a5f0c1d2e3b4030c",
+    "type": "function",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Reply if history is unavailable",
+    "func": "const missing = /ENOENT/.test(msg.error?.message || '');\nif (!msg.res) {\n    if (!missing) node.warn(msg.error?.message || 'Could not refresh the history charts.');\n    return null;\n}\nmsg.statusCode = missing ? 404 : 500;\nmsg.payload = missing ? 'No BikeBeacon history has been recorded for this type yet.' : 'Could not read BikeBeacon history.';\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 960,
+    "y": 930,
+    "wires": [
+      [
+        "a5f0c1d2e3b4030b"
+      ]
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b4030d",
+    "type": "ui-template",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Event history",
+    "group": "a5f0c1d2e3b40310",
+    "order": 1,
+    "width": 4,
+    "height": 0,
+    "className": "",
+    "x": 1200,
+    "y": 810,
+    "wires": [
+      []
+    ],
+    "format": "<template>\n  <section class=\"bike-event-history\" aria-label=\"BikeBeacon event history\">\n    <a href=\"/bikebeacon/history/telemetry\" download=\"bikebeacon-telemetry.jsonl\">Download raw telemetry</a>\n    <div class=\"bike-event-tabs\" role=\"tablist\" aria-label=\"Event type\">\n      <button v-for=\"(tab, index) in tabs\" :key=\"tab.id\" type=\"button\" role=\"tab\"\n        :id=\"tabId(tab.id)\" :aria-controls=\"panelId\" :aria-selected=\"category === tab.id\"\n        :tabindex=\"category === tab.id ? 0 : -1\"\n        @click=\"selectTab(tab.id)\" @keydown=\"moveTab($event, index)\">\n        {{ tab.label }}\n      </button>\n    </div>\n\n    <div :id=\"panelId\" role=\"tabpanel\" :aria-labelledby=\"tabId(category)\" tabindex=\"0\">\n      <p v-if=\"loading && !records.length\" role=\"status\">Loading history…</p>\n      <p v-if=\"visibleErrors.length\" role=\"status\">Could not read {{ visibleErrors.join(', ') }} history. Retrying shortly.</p>\n      <p v-if=\"!loading && !visibleErrors.length && !records.length\">No events recorded yet.</p>\n\n      <template v-if=\"records.length\">\n        <p>{{ changeCount }} {{ changeCount === 1 ? 'change' : 'changes' }} · Los Angeles time</p>\n        <ol class=\"bike-event-list\" :start=\"firstIndex + 1\">\n          <li v-for=\"record in pageRecords\" :key=\"record.category + ':' + record.index\">\n            <div class=\"bike-event-heading\">\n              <span v-if=\"category === 'all'\" class=\"bike-event-type\" :class=\"'bike-type-' + record.category\">{{ eventLabel(record.category) }}</span>\n              <time :datetime=\"record.received_at\">{{ localTime(record.received_at) }}</time>\n            </div>\n            <div class=\"bike-event-transition\">\n              <span v-if=\"record.previous\" class=\"bike-event-value\" :class=\"stateClass(record.previous)\">{{ record.previous }}</span>\n              <span v-if=\"record.previous\" aria-label=\"to\">→</span>\n              <span v-else>Initial state</span>\n              <strong class=\"bike-event-value\" :class=\"stateClass(record.current)\">{{ record.current }}</strong>\n            </div>\n            <details v-if=\"reading(record)\">\n              <summary>Reading details</summary>\n              <p v-if=\"record.last_telemetry\">Last observed {{ localTime(record.last_telemetry.received_at) }}</p>\n              <dl class=\"bike-event-readings\">\n                <template v-for=\"(value, name) in reading(record)\" :key=\"name\">\n                  <dt>{{ fieldNames[name] || name }}</dt>\n                  <dd>{{ value }}</dd>\n                </template>\n              </dl>\n            </details>\n          </li>\n        </ol>\n        <nav v-if=\"pageCount > 1\" class=\"bike-event-pages\" aria-label=\"Event history pages\">\n          <button type=\"button\" :disabled=\"page === 0\" @click=\"page--\">Previous</button>\n          <span>Page {{ page + 1 }} of {{ pageCount }}</span>\n          <button type=\"button\" :disabled=\"page + 1 >= pageCount\" @click=\"page++\">Next</button>\n        </nav>\n      </template>\n    </div>\n  </section>\n</template>\n\n<script>\nexport default {\n    data() {\n        return {\n            tabs: [\n                { id: 'all', label: 'All' },\n                { id: 'connection', label: 'Connection' },\n                { id: 'motion', label: 'Motion' },\n                { id: 'system', label: 'System' },\n                { id: 'alarm', label: 'Alarm' }\n            ],\n            category: 'all',\n            archives: {},\n            errors: [],\n            page: 0,\n            pageSize: 5,\n            loading: true,\n            timer: null,\n            request: null,\n            fieldNames: {\n                seq: 'Sample', armed: 'Armed', moving: 'Moving', alarm: 'Alarm triggered',\n                motion_g: 'Acceleration (g)', rssi: 'Wi-Fi signal (dBm)', uptime_s: 'Uptime (seconds)'\n            }\n        }\n    },\n    computed: {\n        panelId() {\n            return 'bike-event-panel-' + this.id\n        },\n        records() {\n            if (this.category !== 'all') return this.archives[this.category] || []\n            return Object.values(this.archives).flat()\n                .sort((a, b) => b.received_at.localeCompare(a.received_at) || b.index - a.index)\n        },\n        visibleErrors() {\n            return this.errors.filter(id => this.category === 'all' || id === this.category).map(this.eventLabel)\n        },\n        changeCount() {\n            return this.records.filter(record => record.observation === 'change').length\n        },\n        firstIndex() {\n            return this.page * this.pageSize\n        },\n        pageRecords() {\n            return this.records.slice(this.firstIndex, this.firstIndex + this.pageSize)\n        },\n        pageCount() {\n            return Math.ceil(this.records.length / this.pageSize)\n        }\n    },\n    mounted() {\n        this.refresh()\n        this.timer = setInterval(() => {\n            if (!this.loading) this.refresh()\n        }, 30000)\n    },\n    unmounted() {\n        clearInterval(this.timer)\n        this.request?.abort()\n    },\n    methods: {\n        tabId(id) {\n            return 'bike-event-tab-' + this.id + '-' + id\n        },\n        eventLabel(id) {\n            return this.tabs.find(tab => tab.id === id)?.label || id\n        },\n        selectTab(id) {\n            this.category = id\n            this.page = 0\n        },\n        moveTab(event, index) {\n            const last = this.tabs.length - 1\n            const positions = {\n                ArrowLeft: index > 0 ? index - 1 : last,\n                ArrowRight: index < last ? index + 1 : 0,\n                Home: 0,\n                End: last\n            }\n            if (!(event.key in positions)) return\n            event.preventDefault()\n            const id = this.tabs[positions[event.key]].id\n            this.selectTab(id)\n            document.getElementById(this.tabId(id))?.focus()\n        },\n        reading(record) {\n            return record.telemetry || record.last_telemetry?.telemetry\n        },\n        localTime(timestamp) {\n            const date = new Date(timestamp)\n            if (typeof timestamp !== 'string' || Number.isNaN(date.valueOf())) return ''\n            return new Intl.DateTimeFormat('en-US', {\n                timeZone: 'America/Los_Angeles',\n                month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit',\n                timeZoneName: 'short'\n            }).format(date)\n        },\n        stateClass(state) {\n            const colors = {\n                online: 'good', offline: 'bad', clear: 'good', triggered: 'bad',\n                moving: 'warning', armed: 'active', stationary: 'neutral', disarmed: 'neutral'\n            }\n            return 'bike-state-' + (colors[state.toLowerCase()] || 'neutral')\n        },\n        async readArchive(id, signal) {\n            const response = await fetch('/bikebeacon/history/' + id, { cache: 'no-store', signal })\n            if (response.status === 404) return { id, records: [], unreadable: false }\n            if (!response.ok) throw new Error('Unexpected history response')\n            const records = []\n            let unreadable = false\n            for (const line of (await response.text()).split('\\n')) {\n                if (!line.trim()) continue\n                try {\n                    const record = JSON.parse(line)\n                    if (typeof record?.received_at !== 'string' || typeof record.current !== 'string') {\n                        throw new Error('Invalid history record')\n                    }\n                    records.push({ ...record, category: id, index: records.length })\n                } catch {\n                    unreadable = true\n                }\n            }\n            return { id, records: records.reverse(), unreadable }\n        },\n        async refresh() {\n            this.request?.abort()\n            const request = new AbortController()\n            this.request = request\n            this.loading = true\n            const types = this.tabs.slice(1).map(tab => tab.id)\n            try {\n                const results = await Promise.allSettled(types.map(id => this.readArchive(id, request.signal)))\n                if (request.signal.aborted) return\n                const archives = { ...this.archives }\n                const errors = []\n                for (const [index, result] of results.entries()) {\n                    const id = types[index]\n                    if (result.status === 'fulfilled') {\n                        archives[id] = result.value.records\n                        if (result.value.unreadable) errors.push(id)\n                    } else {\n                        errors.push(id)\n                    }\n                }\n                this.archives = archives\n                this.errors = errors\n                this.page = Math.min(this.page, Math.max(0, this.pageCount - 1))\n            } finally {\n                if (!request.signal.aborted) this.loading = false\n            }\n        }\n    }\n}\n</script>\n\n<style>\n.bike-event-history { display: grid; gap: 0.75rem; padding: 0.5rem; }\n.bike-event-history p { margin: 0; font-size: 0.875rem; }\n.bike-event-tabs { display: flex; flex-wrap: wrap; gap: 0.25rem; }\n.bike-event-history button {\n    color: inherit; font: inherit; background: transparent; border: 1px solid currentColor;\n    border-radius: 0.3rem; padding: 0.25rem 0.45rem;\n}\n.bike-event-tabs button { font-size: 0.875rem; }\n.bike-event-tabs button[aria-selected=\"true\"] { font-weight: 700; background: rgba(127, 127, 127, 0.2); }\n.bike-event-history button:disabled { opacity: 0.45; }\n.bike-event-list { list-style: none; padding: 0; margin: 0.4rem 0; }\n.bike-event-list li { padding: 0.65rem 0; border-top: 1px solid rgba(127, 127, 127, 0.35); }\n.bike-event-heading, .bike-event-transition, .bike-event-pages {\n    display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.25rem 0.5rem;\n}\n.bike-event-heading { justify-content: space-between; }\n.bike-event-heading time { font-size: 0.8rem; font-variant-numeric: tabular-nums; }\n.bike-event-transition { margin: 0.35rem 0; font-size: 0.875rem; }\n.bike-event-type { border: 1px solid currentColor; padding: 0.08rem 0.35rem; font-size: 0.75rem; }\n.bike-type-connection { border-radius: 1rem; }\n.bike-type-motion { border-style: dashed; }\n.bike-type-system { border-radius: 0.25rem; }\n.bike-type-alarm { border-style: double; border-width: 3px; }\n.bike-event-value { border-radius: 0.25rem; padding: 0.08rem 0.35rem; }\n.bike-state-good { background: #d8f3e1; color: #135534; }\n.bike-state-bad { background: #fbe0df; color: #8a242a; }\n.bike-state-warning { background: #fff0c7; color: #6e4600; }\n.bike-state-active { background: #dceaff; color: #214881; }\n.bike-state-neutral { background: #eceef1; color: #384250; }\n.bike-event-readings { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.15rem 0.75rem; }\n.bike-event-readings dd { margin: 0; }\n.bike-state-row { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 0.35rem; }\n.bike-state-options { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.35rem; font-size: 0.8rem; }\n.bike-state-options .bike-event-value { white-space: nowrap; }\n.bike-state-selected { font-weight: 700; box-shadow: 0 0 0 1px currentColor; }\n</style>\n",
+    "head": "",
+    "noerr": 0,
+    "storeOutMessages": false,
+    "passthru": false,
+    "resendOnRefresh": false,
+    "templateScope": "local"
+  },
+  {
+    "id": "a5f0c1d2e3b40310",
+    "type": "ui-group",
+    "name": "Logs",
+    "page": "a5f0c1d2e3b40012",
+    "width": 4,
+    "height": 1,
+    "order": 3,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "a5f0c1d2e3b40311",
+    "type": "ui-markdown",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Device",
+    "group": "a5f0c1d2e3b40013",
+    "order": 1,
+    "width": 4,
+    "height": 1,
+    "content": "### Device",
+    "className": "",
+    "x": 680,
+    "y": 220,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a5f0c1d2e3b40312",
+    "type": "ui-markdown",
+    "z": "a5f0c1d2e3b40001",
+    "name": "Bike",
+    "group": "a5f0c1d2e3b40013",
+    "order": 5,
+    "width": 4,
+    "height": 1,
+    "content": "### Bike",
+    "className": "",
+    "x": 680,
+    "y": 300,
+    "wires": [
+      []
+    ]
+  }
+]
